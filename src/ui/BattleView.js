@@ -9,9 +9,11 @@ const BattleView = {
   /** Call when loading a character to wipe previous session's state. */
   reset() {
     this._logEl.innerHTML = '<p class="log-entry">Awaiting battle...</p>';
-    document.getElementById("enemy-name").textContent    = "";
-    document.getElementById("enemy-hp-fill").style.width = "100%";
+    document.getElementById("enemy-name").textContent     = "";
+    document.getElementById("enemy-hp-fill").style.width  = "100%";
     document.getElementById("enemy-hp-label").textContent = "";
+    document.getElementById("battle-hero-hp-fill").style.width  = "100%";
+    document.getElementById("battle-hero-hp-label").textContent = "";
     this.setBossReady(false);
   },
 
@@ -24,6 +26,12 @@ const BattleView = {
     const pct = Math.max(0, (hp / maxHp) * 100);
     document.getElementById("enemy-hp-fill").style.width = `${pct}%`;
     document.getElementById("enemy-hp-label").textContent = `${Math.max(0, hp)}/${maxHp}`;
+  },
+
+  setHeroHp(hp, maxHp) {
+    const pct = Math.max(0, (hp / maxHp) * 100);
+    document.getElementById("battle-hero-hp-fill").style.width  = `${pct}%`;
+    document.getElementById("battle-hero-hp-label").textContent = `${Math.max(0, hp)}/${maxHp}`;
   },
 
   setBossReady(ready) {

@@ -18,7 +18,7 @@ const CharacterManager = {
    * @returns {object} New character data
    */
   createCharacter(name, classId = "barbarian") {
-    const classDef = CLASS_DEFINITIONS[classId];
+    const classDef = CLASS_DEFINITIONS[classId] ?? CLASS_DEFINITIONS.barbarian;
     const stats    = { ...classDef.baseStats };
     const maxHp    = BALANCE.BASE_HP + stats.vit * BALANCE.HP_PER_VIT;
 
@@ -41,10 +41,11 @@ const CharacterManager = {
         maxFloor:     1,
         bossReady:    false,
       },
-      currencies: { gold: 0 },
-      equipment:  { weapon: null, armor: null, accessory: null },
-      inventory:  [],
-      settings:   { autoSell: "common" },
+      currencies:  { gold: 0 },
+      equipment:   { weapon: null, armor: null, accessory: null },
+      inventory:   [],
+      settings:    { autoSell: "common" },
+      _killCount:  0,
       // lastSaveTime set by Firestore serverTimestamp on write
     };
   },

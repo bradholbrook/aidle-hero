@@ -297,6 +297,7 @@ html, body {
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 8px 0 12px;
   gap: 8px;
   flex-shrink: 0;
@@ -331,7 +332,6 @@ html, body {
 
 /* ─── HP Bar ───────────────────────────────────────────────── */
 .hp-bar-wrap {
-  flex: 1;
   background: var(--surface2);
   border-radius: 4px;
   height: 16px;
@@ -350,12 +350,6 @@ html, body {
   z-index: 1;
   color: #fff;
   text-shadow: 0 0 3px #000;
-}
-#hp-bar-fill {
-  height: 100%;
-  background: var(--hp-green);
-  width: 100%;
-  transition: width 0.3s ease;
 }
 
 /* ─── Tab Content ──────────────────────────────────────────── */
@@ -389,14 +383,53 @@ html, body {
 }
 .sprite-placeholder { font-size: 3rem; line-height: 1; }
 #vs-label { color: var(--text-dim); font-weight: 700; font-size: 0.85rem; }
-#enemy-info { display: flex; flex-direction: column; gap: 4px; }
-#enemy-name { font-size: 0.85rem; color: var(--text-dim); }
 .enemy-hp { height: 12px; }
 #enemy-hp-fill {
   height: 100%;
   background: var(--hp-red);
   width: 100%;
   transition: width 0.2s ease;
+}
+#battle-hero-hp-fill {
+  height: 100%;
+  background: var(--hp-green);
+  width: 100%;
+  transition: width 0.3s ease;
+}
+
+/* ─── Combat HP row ─────────────────────────────────────────── */
+#combat-bars {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+}
+.combat-bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+#combat-bars .hp-bar-wrap {
+  width: 100%;
+}
+.combatant-label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.combat-vs {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  flex-shrink: 0;
 }
 
 #battle-log {
@@ -459,6 +492,188 @@ html, body {
 .inv-slot.rarity-rare      { border-color: #60a5fa; }
 .inv-slot.rarity-epic      { border-color: #a78bfa; }
 .inv-slot.rarity-legendary { border-color: var(--accent); box-shadow: 0 0 8px rgba(200,168,75,0.4); }
+
+/* ─── Battle log: enemy damage ────────────────────────────── */
+.log-entry.enemy-dmg         { color: #f97316; }
+.log-entry.item-drop-common    { color: #888; }
+.log-entry.item-drop-uncommon  { color: #4ade80; }
+.log-entry.item-drop-rare      { color: #60a5fa; }
+.log-entry.item-drop-epic      { color: #a78bfa; }
+.log-entry.item-drop-legendary { color: var(--accent); font-weight: 700; }
+
+/* ─── Character sheet (equip tab) ─────────────────────────── */
+#char-stats-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.stat-row-display {
+  display: flex;
+  gap: 8px;
+}
+.stat-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.stat-cell-alloc {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.stat-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+}
+.stat-alloc-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.stat-minus, .stat-plus {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  width: 26px;
+  height: 26px;
+  font-size: 1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.stat-minus:active, .stat-plus:active { opacity: 0.7; }
+.stat-minus:disabled, .stat-plus:disabled { opacity: 0.3; cursor: not-allowed; }
+
+#stat-alloc-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+#cs-stat-points { font-size: 0.8rem; color: var(--accent); }
+#btn-apply-stats {
+  width: auto;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+}
+
+#char-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 8px 0;
+  flex-shrink: 0;
+}
+#equip-col-left, #equip-col-right {
+  display: flex;
+  flex-direction: column;
+}
+#hero-avatar {
+  font-size: 4rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+#equip-weapon-row {
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Equip tab slots override — higher specificity to beat generic .equip-slot flex:1 */
+#tab-equip .equip-slot {
+  flex: none !important;
+  width: 90px;
+  min-height: 80px;
+  border-width: 2px;
+  border-style: dashed;
+}
+#tab-equip .equip-slot.has-item { border-style: solid; }
+#equip-weapon-row .equip-slot   { width: 140px; }
+.equip-item-icon { font-size: 1.5rem; }
+
+/* ─── Bag tab ──────────────────────────────────────────────── */
+.bag-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  flex-shrink: 0;
+}
+#bag-count { font-size: 0.8rem; color: var(--text-dim); }
+.sell-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sell-select {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  flex: 1;
+}
+#btn-auto-sell {
+  width: auto;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  flex-shrink: 0;
+}
+
+/* ─── Item inspect overlay ─────────────────────────────────── */
+.inspect-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.inspect-icon { font-size: 2.5rem; line-height: 1; flex-shrink: 0; }
+.inspect-name { font-size: 1rem; font-weight: 700; }
+.inspect-meta { font-size: 0.75rem; color: var(--text-dim); margin-top: 2px; }
+
+.inspect-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 0;
+}
+.inspect-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+.inspect-stat-name { color: var(--text-dim); }
+.inspect-stat-val  { display: flex; align-items: center; gap: 6px; font-weight: 700; }
+.inspect-stat-diff { font-size: 0.75rem; }
+.diff-up   { color: #4ade80; }
+.diff-down { color: var(--danger); }
+.diff-same { color: var(--text-dim); }
+
+.inspect-actions {
+  display: flex;
+  gap: 8px;
+  padding-top: 4px;
+}
+.inspect-actions .btn { flex: 1; }
 
 /* ─── Coming Soon ──────────────────────────────────────────── */
 .coming-soon {

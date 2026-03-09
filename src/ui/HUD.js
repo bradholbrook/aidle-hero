@@ -10,10 +10,6 @@ const HUD = {
     document.getElementById("hud-name").textContent  = p.name;
     document.getElementById("hud-gold").textContent  = `💰 ${c.gold.toLocaleString()}`;
     document.getElementById("hud-floor").textContent = `Floor ${pr.currentFloor}`;
-
-    const hpPct = Math.max(0, (s.currentHp / s.maxHp) * 100);
-    document.getElementById("hp-bar-fill").style.width = `${hpPct}%`;
-    document.getElementById("hp-label").textContent    = `${s.currentHp}/${s.maxHp}`;
   },
 };
 

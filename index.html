@@ -137,10 +137,6 @@
           <span id="hud-level">LVL 1</span>
           <span id="hud-name">Hero</span>
         </div>
-        <div class="hp-bar-wrap">
-          <div id="hp-bar-fill"></div>
-          <span id="hp-label">100/100</span>
-        </div>
         <div class="stat-group stat-group-right">
           <span id="hud-gold">💰 0</span>
           <span id="hud-floor">Floor 1</span>
@@ -158,11 +154,21 @@
             <div id="vs-label">VS</div>
             <div id="enemy-sprite" class="sprite-placeholder">👹</div>
           </div>
-          <div id="enemy-info">
-            <span id="enemy-name">Slime</span>
-            <div class="hp-bar-wrap enemy-hp">
-              <div id="enemy-hp-fill"></div>
-              <span id="enemy-hp-label">50/50</span>
+          <div id="combat-bars">
+            <div class="combat-bar-group">
+              <span class="combatant-label">You</span>
+              <div class="hp-bar-wrap">
+                <div id="battle-hero-hp-fill"></div>
+                <span id="battle-hero-hp-label">—</span>
+              </div>
+            </div>
+            <div class="combat-vs">VS</div>
+            <div class="combat-bar-group">
+              <span class="combatant-label" id="enemy-name"></span>
+              <div class="hp-bar-wrap enemy-hp">
+                <div id="enemy-hp-fill"></div>
+                <span id="enemy-hp-label">—</span>
+              </div>
             </div>
           </div>
           <div id="battle-log">
@@ -171,21 +177,84 @@
           <button id="btn-boss" class="btn btn-boss" disabled>Fight Boss 🔒</button>
         </div>
 
-        <!-- Tab: Inventory -->
-        <div id="tab-inventory" class="tab-view">
-          <div id="equipment-slots">
+        <!-- Tab: Equip (character sheet) -->
+        <div id="tab-equip" class="tab-view">
+          <!-- Stats panel -->
+          <div id="char-stats-panel">
+            <div class="stat-row-display">
+              <div class="stat-cell">
+                <span class="stat-label">HP</span>
+                <span id="cs-hp">—</span>
+              </div>
+              <div class="stat-cell">
+                <span class="stat-label">Damage</span>
+                <span id="cs-damage">—</span>
+              </div>
+            </div>
+            <div class="stat-row-display">
+              <div class="stat-cell-alloc">
+                <span class="stat-label">STR</span>
+                <div class="stat-alloc-row">
+                  <button class="stat-minus" data-stat="str">−</button>
+                  <span id="cs-str">—</span>
+                  <button class="stat-plus" data-stat="str">+</button>
+                </div>
+              </div>
+              <div class="stat-cell-alloc">
+                <span class="stat-label">DEX</span>
+                <div class="stat-alloc-row">
+                  <button class="stat-minus" data-stat="dex">−</button>
+                  <span id="cs-dex">—</span>
+                  <button class="stat-plus" data-stat="dex">+</button>
+                </div>
+              </div>
+              <div class="stat-cell-alloc">
+                <span class="stat-label">VIT</span>
+                <div class="stat-alloc-row">
+                  <button class="stat-minus" data-stat="vit">−</button>
+                  <span id="cs-vit">—</span>
+                  <button class="stat-plus" data-stat="vit">+</button>
+                </div>
+              </div>
+            </div>
+            <div id="stat-alloc-section" style="display:none">
+              <span id="cs-stat-points"></span>
+              <button id="btn-apply-stats" class="btn btn-secondary" disabled>Apply</button>
+            </div>
+          </div>
+
+          <!-- Character + equipment layout -->
+          <div id="char-display">
+            <div id="equip-col-left">
+              <div class="equip-slot" data-slot="armor"><span class="slot-label">Armor</span></div>
+            </div>
+            <div id="hero-avatar">⚔️</div>
+            <div id="equip-col-right">
+              <div class="equip-slot" data-slot="accessory"><span class="slot-label">Ring</span></div>
+            </div>
+          </div>
+          <div id="equip-weapon-row">
             <div class="equip-slot" data-slot="weapon"><span class="slot-label">Weapon</span></div>
-            <div class="equip-slot" data-slot="armor"><span class="slot-label">Armor</span></div>
-            <div class="equip-slot" data-slot="accessory"><span class="slot-label">Ring</span></div>
+          </div>
+        </div>
+
+        <!-- Tab: Bag (inventory grid) -->
+        <div id="tab-bag" class="tab-view">
+          <div class="bag-header">
+            <span id="bag-count">0/50</span>
+            <div class="sell-row">
+              <select id="sell-rarity-select" class="sell-select">
+                <option value="common">Common &amp; below</option>
+                <option value="uncommon">Uncommon &amp; below</option>
+                <option value="rare">Rare &amp; below</option>
+                <option value="epic">Epic &amp; below</option>
+              </select>
+              <button id="btn-auto-sell" class="btn btn-secondary">Sell</button>
+            </div>
           </div>
           <div id="inventory-grid">
             <!-- populated by InventoryView.js -->
           </div>
-        </div>
-
-        <!-- Tab: Skills (locked Phase 3+) -->
-        <div id="tab-skills" class="tab-view">
-          <div class="coming-soon">🔒 Skills coming soon</div>
         </div>
 
         <!-- Tab: Shop -->
@@ -198,8 +267,8 @@
       <!-- Bottom Navigation -->
       <nav id="bottom-tabs">
         <button class="tab-btn active" data-tab="battle">⚔️<span>Battle</span></button>
-        <button class="tab-btn" data-tab="inventory">🎒<span>Gear</span></button>
-        <button class="tab-btn" data-tab="skills">✨<span>Skills</span></button>
+        <button class="tab-btn" data-tab="equip">🛡️<span>Equip</span></button>
+        <button class="tab-btn" data-tab="bag">🎒<span>Bag</span></button>
         <button class="tab-btn" data-tab="shop">🛒<span>Shop</span></button>
       </nav>
 
@@ -214,6 +283,27 @@
         <button id="menu-switch-char" class="menu-item">👤 Switch Character</button>
         <button id="menu-logout" class="menu-item menu-item-danger">🚪 Log Out</button>
         <button id="menu-close" class="menu-item menu-item-cancel">Cancel</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- OVERLAY: Item Inspect                     -->
+    <!-- ══════════════════════════════════════════ -->
+    <div id="inspect-overlay" class="overlay hidden">
+      <div class="menu-card">
+        <div class="inspect-header">
+          <span id="inspect-icon" class="inspect-icon"></span>
+          <div class="inspect-title-block">
+            <div id="inspect-name" class="inspect-name"></div>
+            <div id="inspect-meta" class="inspect-meta"></div>
+          </div>
+        </div>
+        <div id="inspect-stats" class="inspect-stats"></div>
+        <div id="inspect-actions" class="inspect-actions">
+          <button id="btn-inspect-primary" class="btn btn-primary">Equip</button>
+          <button id="btn-inspect-sell" class="btn btn-secondary">Sell</button>
+        </div>
+        <button id="btn-inspect-close" class="menu-item menu-item-cancel">Close</button>
       </div>
     </div>
 

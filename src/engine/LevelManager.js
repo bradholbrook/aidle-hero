@@ -21,14 +21,10 @@ const LevelManager = {
       p.expToNext  = BALANCE.expToNext(p.level);
       p.statPoints = (p.statPoints ?? 0) + this.STAT_POINTS_PER_LEVEL;
 
-      // Auto stat bonuses per level
+      // Auto stat bonuses per level (base stats only; caller must recalcStats for HP)
       for (const [stat, bonus] of Object.entries(this.STAT_BONUS_PER_LEVEL)) {
-        s[stat] = (s[stat] ?? 0) + bonus;
+        if (bonus) s[stat] = (s[stat] ?? 0) + bonus;
       }
-
-      // Recalc max HP from new vit
-      s.maxHp    = BALANCE.BASE_HP + s.vit * BALANCE.HP_PER_VIT;
-      s.currentHp = s.maxHp; // heal to full on level-up
 
       levelsGained++;
     }
