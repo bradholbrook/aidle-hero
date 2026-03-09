@@ -13,7 +13,8 @@ fi
 
 echo "Starting dev server on port $PORT..."
 cd "$DIR"
-python3 dev-server.py $PORT &
+nohup python3 dev-server.py $PORT > /tmp/aidle-hero-server.log 2>&1 &
+disown
 # Wait up to 5s for the server to come up
 for i in $(seq 1 10); do
     sleep 0.5

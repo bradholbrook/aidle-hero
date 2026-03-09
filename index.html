@@ -2,12 +2,235 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Aidle Hero</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <div id="app"></div>
-  <script type="module" src="js/app.js"></script>
+  <div id="game-container">
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN: Splash                            -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="screen-splash" class="game-screen active">
+      <div class="splash-content">
+        <h1 class="game-title">AIDLE<br>HERO</h1>
+        <p class="splash-sub">Idle RPG</p>
+        <button id="btn-start" class="btn btn-primary" disabled>Loading...</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN: Auth Choice                       -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="screen-auth" class="game-screen">
+      <div class="splash-content">
+        <h1 class="game-title">AIDLE<br>HERO</h1>
+        <p class="splash-sub">Choose how to play</p>
+        <div class="auth-btn-group">
+          <button id="btn-auth-signin" class="btn btn-primary">Sign In</button>
+          <button id="btn-auth-create" class="btn btn-secondary">Create Account</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN: Sign In                           -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="screen-sign-in" class="game-screen">
+      <div class="screen-header">
+        <button class="btn-back" id="btn-signin-back">← Back</button>
+        <h2>Sign In</h2>
+      </div>
+      <div class="screen-body">
+        <div class="form-group">
+          <label for="signin-username">Username</label>
+          <input type="text" id="signin-username" placeholder="your username" autocomplete="username" autocorrect="off" autocapitalize="none" />
+        </div>
+        <div class="form-group">
+          <label for="signin-password">Password</label>
+          <input type="password" id="signin-password" placeholder="your password" autocomplete="current-password" />
+        </div>
+        <p id="signin-error" class="form-error"></p>
+        <button id="btn-signin-submit" class="btn btn-primary">Sign In</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN: Create Account                    -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="screen-create-account" class="game-screen">
+      <div class="screen-header">
+        <button class="btn-back" id="btn-create-back">← Back</button>
+        <h2>Create Account</h2>
+      </div>
+      <div class="screen-body">
+        <div class="security-warning">
+          ⚠️ <strong>Security Notice:</strong> Your username and password are transmitted without additional encryption. Do not reuse a password from another site.
+        </div>
+        <div class="form-group">
+          <label for="create-username">Username</label>
+          <input type="text" id="create-username" placeholder="choose a username" maxlength="20" autocomplete="username" autocorrect="off" autocapitalize="none" />
+          <span class="field-hint">3–20 characters. Letters, numbers, and dashes only. Must be unique.</span>
+        </div>
+        <div class="form-group">
+          <label for="create-password">Password</label>
+          <input type="password" id="create-password" placeholder="choose a password" autocomplete="new-password" />
+        </div>
+        <p id="create-error" class="form-error"></p>
+        <button id="btn-create-submit" class="btn btn-primary">Create Account</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN: Character Select / Manage         -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="screen-char-select" class="game-screen">
+      <div class="screen-header">
+        <h2>Your Heroes</h2>
+        <span id="char-select-user" class="header-user"></span>
+        <button class="btn-icon btn-menu-early" title="Menu">⚙️</button>
+      </div>
+      <div class="screen-body">
+        <div id="char-list">
+          <!-- populated by JS -->
+        </div>
+        <button id="btn-new-char" class="btn btn-secondary">+ New Character</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN: Character Create                  -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="screen-char-create" class="game-screen">
+      <div class="screen-header">
+        <button class="btn-back" id="btn-char-create-back">← Back</button>
+        <h2>New Hero</h2>
+      </div>
+      <div class="screen-body">
+        <div class="class-card selected" id="class-barbarian">
+          <div class="class-icon">⚔️</div>
+          <div class="class-name">Barbarian</div>
+          <div class="class-desc">Raw power and brute strength. Masters of melee combat.</div>
+        </div>
+        <div class="form-group">
+          <label for="hero-name">Hero Name</label>
+          <input type="text" id="hero-name" placeholder="Enter name..." maxlength="20" autocomplete="off" />
+          <span class="field-hint">3–20 characters. Letters, numbers, spaces, and dashes.</span>
+        </div>
+        <p id="char-create-error" class="form-error"></p>
+        <button id="btn-create-char" class="btn btn-primary">Begin Adventure</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN: Main HUD                          -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="screen-main" class="game-screen">
+
+      <!-- Top Stats Bar -->
+      <header id="stats-bar">
+        <div class="stat-group">
+          <span id="hud-level">LVL 1</span>
+          <span id="hud-name">Hero</span>
+        </div>
+        <div class="hp-bar-wrap">
+          <div id="hp-bar-fill"></div>
+          <span id="hp-label">100/100</span>
+        </div>
+        <div class="stat-group stat-group-right">
+          <span id="hud-gold">💰 0</span>
+          <span id="hud-floor">Floor 1</span>
+        </div>
+        <button id="btn-system-menu" class="btn-icon" title="Menu">⚙️</button>
+      </header>
+
+      <!-- Tab Content Area -->
+      <main id="tab-content">
+
+        <!-- Tab: Battle -->
+        <div id="tab-battle" class="tab-view active-tab">
+          <div id="battle-arena">
+            <div id="hero-sprite" class="sprite-placeholder">⚔️</div>
+            <div id="vs-label">VS</div>
+            <div id="enemy-sprite" class="sprite-placeholder">👹</div>
+          </div>
+          <div id="enemy-info">
+            <span id="enemy-name">Slime</span>
+            <div class="hp-bar-wrap enemy-hp">
+              <div id="enemy-hp-fill"></div>
+              <span id="enemy-hp-label">50/50</span>
+            </div>
+          </div>
+          <div id="battle-log">
+            <p class="log-entry">Awaiting battle...</p>
+          </div>
+          <button id="btn-boss" class="btn btn-boss" disabled>Fight Boss 🔒</button>
+        </div>
+
+        <!-- Tab: Inventory -->
+        <div id="tab-inventory" class="tab-view">
+          <div id="equipment-slots">
+            <div class="equip-slot" data-slot="weapon"><span class="slot-label">Weapon</span></div>
+            <div class="equip-slot" data-slot="armor"><span class="slot-label">Armor</span></div>
+            <div class="equip-slot" data-slot="accessory"><span class="slot-label">Ring</span></div>
+          </div>
+          <div id="inventory-grid">
+            <!-- populated by InventoryView.js -->
+          </div>
+        </div>
+
+        <!-- Tab: Skills (locked Phase 3+) -->
+        <div id="tab-skills" class="tab-view">
+          <div class="coming-soon">🔒 Skills coming soon</div>
+        </div>
+
+        <!-- Tab: Shop -->
+        <div id="tab-shop" class="tab-view">
+          <div class="coming-soon">🛒 Shop coming soon</div>
+        </div>
+
+      </main>
+
+      <!-- Bottom Navigation -->
+      <nav id="bottom-tabs">
+        <button class="tab-btn active" data-tab="battle">⚔️<span>Battle</span></button>
+        <button class="tab-btn" data-tab="inventory">🎒<span>Gear</span></button>
+        <button class="tab-btn" data-tab="skills">✨<span>Skills</span></button>
+        <button class="tab-btn" data-tab="shop">🛒<span>Shop</span></button>
+      </nav>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- OVERLAY: System Menu                      -->
+    <!-- ══════════════════════════════════════════ -->
+    <div id="system-menu-overlay" class="overlay hidden">
+      <div class="menu-card">
+        <h3 class="menu-title">Menu</h3>
+        <button id="menu-switch-char" class="menu-item">👤 Switch Character</button>
+        <button id="menu-logout" class="menu-item menu-item-danger">🚪 Log Out</button>
+        <button id="menu-close" class="menu-item menu-item-cancel">Cancel</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- OVERLAY: Confirm Delete                   -->
+    <!-- ══════════════════════════════════════════ -->
+    <div id="confirm-overlay" class="overlay hidden">
+      <div class="menu-card">
+        <h3 class="menu-title" id="confirm-title">Are you sure?</h3>
+        <p class="confirm-msg" id="confirm-msg"></p>
+        <button id="confirm-yes" class="btn btn-danger">Delete</button>
+        <button id="confirm-no" class="menu-item menu-item-cancel">Cancel</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module" src="src/main.js"></script>
 </body>
 </html>
