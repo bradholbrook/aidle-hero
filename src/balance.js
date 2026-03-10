@@ -22,7 +22,7 @@ export const BALANCE = {
   OFFLINE_RATE_DIVISOR:  3,  // offline kills take 3× longer than live
 
   // ── Enemy Scaling (enemy stats scale per floor) ──────────────
-  ENEMY_BASE_HP:     20,
+  ENEMY_BASE_HP:     60,
   ENEMY_HP_EXPONENT: 1.15,   // hp = BASE * floor^EXPONENT
   ENEMY_BASE_REWARD_GOLD: 5,
   ENEMY_BASE_REWARD_EXP:  10,
@@ -44,16 +44,16 @@ export const BALANCE = {
   SELL_VALUE_BASE:   3,      // gold per floor per rarity multiplier
 
   // ── Enemy Combat ─────────────────────────────────────────────
-  ENEMY_BASE_DAMAGE:    3,
+  ENEMY_BASE_DAMAGE:    1.0,
   ENEMY_DAMAGE_EXP:     1.1,
-  ENEMY_ATTACK_TICK_MS: 1200,  // slower than hero (500ms)
+  ENEMY_ATTACK_TICK_MS: 1000,  // 2:1 ratio vs hero (500ms) — one enemy attack per two hero attacks
 
   // ── Hero Damage Variance ─────────────────────────────────────
   HERO_DAMAGE_VARIANCE: 0.25,  // ±25% of base damage
 
   // ── Health Regen ─────────────────────────────────────────────
-  HP_REGEN_TICK_MS: 4000,
-  HP_REGEN_PCT:     0.015,  // 1.5% of maxHp per tick
+  HP_REGEN_TICK_MS: 2000,
+  HP_REGEN_PCT:     0.030,  // 3% of maxHp per tick
 
   // ── EXP / Leveling ──────────────────────────────────────────
   EXP_BASE:          100,
