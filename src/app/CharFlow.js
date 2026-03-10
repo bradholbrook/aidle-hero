@@ -17,7 +17,7 @@ const CharFlow = {
   _bound:   false,
 
   /**
-   * callbacks: { onCharSelected(gameState, charId), onLogout() }
+   * callbacks: { onCharSelected(gameState, charId), onLogout(), onDeleteAccount() }
    */
   init(session, callbacks) {
     this._session = session;
@@ -32,7 +32,8 @@ const CharFlow = {
     // Re-init SystemMenu with char-select–appropriate callbacks each time we land here.
     // (GameSession.start overwrites these with full in-game callbacks when a char is loaded.)
     SystemMenu.init({
-      onLogout: () => this._cb?.onLogout?.(),
+      onLogout:        () => this._cb?.onLogout?.(),
+      onDeleteAccount: () => this._cb?.onDeleteAccount?.(),
     });
     UIManager.showScreen("char-select");
     document.getElementById("char-select-user").textContent = this._session.displayName;
@@ -80,10 +81,18 @@ const CharFlow = {
         UIManager.confirm(
           `Delete "${char.profile?.name}"? This cannot be undone.`,
           async () => {
-            await FirebaseService.deleteCharacter(
-              this._session.userKey, char.id, char.profile?.name,
-            );
-            this._renderList();
+            try {
+              await FirebaseService.deleteCharacter(
+                this._session.userKey, char.id, char.profile?.name,
+              );
+              this._renderList();
+            } catch (err) {
+              const listEl = document.getElementById("char-list");
+              listEl.insertAdjacentHTML(
+                "afterbegin",
+                `<p style="color:var(--danger);padding:8px 0">Delete failed: ${err.message ?? "check Firestore rules"}</p>`,
+              );
+            }
           },
         );
       });

@@ -24,6 +24,23 @@ function onSignedIn(session) {
     AuthFlow.show();
   };
 
+  const doDeleteAccount = () => {
+    UIManager.confirm(
+      `Permanently delete account "${session.displayName}" and ALL characters? This cannot be undone.`,
+      async () => {
+        try {
+          await FirebaseService.deleteAccount(session.userKey);
+          AuthFlow.show();
+        } catch (err) {
+          console.error("Delete account failed:", err);
+          // Re-show auth so the user isn't stuck; partial deletion is possible.
+          FirebaseService.signOut();
+          AuthFlow.show();
+        }
+      },
+    );
+  };
+
   CharFlow.init(session, {
     onCharSelected: (gameState, charId) => {
       GameSession.start(session, charId, gameState, {
@@ -31,7 +48,8 @@ function onSignedIn(session) {
         onLogout:     doLogout,
       });
     },
-    onLogout: doLogout,
+    onLogout:        doLogout,
+    onDeleteAccount: doDeleteAccount,
   });
   CharFlow.show();
 }

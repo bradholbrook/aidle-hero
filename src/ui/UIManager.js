@@ -40,17 +40,18 @@ const UIManager = {
     document.getElementById("confirm-msg").textContent = message;
     this.showOverlay("confirm-overlay");
 
-    const yes = document.getElementById("confirm-yes");
-    const no  = document.getElementById("confirm-no");
+    // Always replace buttons first to drop any stale listeners from a previous
+    // call that was dismissed by tapping outside (without clicking yes/no).
+    const oldYes = document.getElementById("confirm-yes");
+    const oldNo  = document.getElementById("confirm-no");
+    const yes    = oldYes.cloneNode(true);
+    const no     = oldNo.cloneNode(true);
+    oldYes.replaceWith(yes);
+    oldNo.replaceWith(no);
 
-    const cleanup = () => {
-      this.hideOverlay("confirm-overlay");
-      yes.replaceWith(yes.cloneNode(true));
-      no.replaceWith(no.cloneNode(true));
-    };
-
-    document.getElementById("confirm-yes").addEventListener("click", () => { cleanup(); onConfirm(); }, { once: true });
-    document.getElementById("confirm-no").addEventListener("click",  () => { cleanup(); },             { once: true });
+    const cleanup = () => this.hideOverlay("confirm-overlay");
+    yes.addEventListener("click", () => { cleanup(); onConfirm(); }, { once: true });
+    no.addEventListener("click",  () => { cleanup(); },             { once: true });
   },
 };
 

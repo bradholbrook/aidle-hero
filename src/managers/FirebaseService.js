@@ -172,7 +172,25 @@ const FirebaseService = {
 
   async deleteCharacter(userKey, characterId, charName) {
     await deleteDoc(doc(db, "users", userKey, "characters", characterId));
-    if (charName) await this.releaseCharName(charName);
+    // Best-effort — stale charNames entries are harmless (just block name reuse).
+    if (charName) {
+      try { await this.releaseCharName(charName); } catch { /* ignore */ }
+    }
+  },
+
+  /**
+   * Permanently deletes the account and all its characters.
+   * Clears the local session.
+   */
+  async deleteAccount(userKey) {
+    // Delete all characters (name release is best-effort inside deleteCharacter).
+    const chars = await this.listCharacters(userKey);
+    for (const char of chars) {
+      await this.deleteCharacter(userKey, char.id, char.profile?.name);
+    }
+    // Delete the account document itself.
+    await deleteDoc(doc(db, "accounts", userKey));
+    this.clearSession();
   },
 };
 

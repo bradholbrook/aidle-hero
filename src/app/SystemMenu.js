@@ -21,7 +21,8 @@ const SystemMenu = {
   },
 
   open(fromGame = false) {
-    document.getElementById("menu-switch-char").style.display = fromGame ? "" : "none";
+    document.getElementById("menu-switch-char").style.display    = fromGame ? "" : "none";
+    document.getElementById("menu-delete-account").style.display = fromGame ? "none" : "";
     UIManager.showOverlay("system-menu-overlay");
   },
 
@@ -48,6 +49,11 @@ const SystemMenu = {
     document.getElementById("menu-logout").addEventListener("click", () => {
       this.close();
       this._cb?.onLogout?.();
+    });
+
+    document.getElementById("menu-delete-account").addEventListener("click", () => {
+      this.close();
+      this._cb?.onDeleteAccount?.();
     });
   },
 };
