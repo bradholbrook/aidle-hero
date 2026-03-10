@@ -11,7 +11,15 @@ export const BALANCE = {
 
   // ── Combat ──────────────────────────────────────────────────
   COMBAT_TICK_MS:    500,    // how often the foreground loop fires
-  BOSS_HP_MULTIPLIER: 8,     // boss HP = normal enemy HP * this
+  BOSS_HP_MULTIPLIER: 10,    // boss HP = normal enemy HP * this
+
+  // ── Boss gate (kills needed scales with floor) ───────────────
+  BOSS_KILL_BASE:       10,  // kills needed on floor 1
+  BOSS_KILL_PER_FLOOR:   2,  // +N per floor
+  BOSS_KILL_MAX:        25,  // cap
+
+  // ── Offline simulation ───────────────────────────────────────
+  OFFLINE_RATE_DIVISOR:  3,  // offline kills take 3× longer than live
 
   // ── Enemy Scaling (enemy stats scale per floor) ──────────────
   ENEMY_BASE_HP:     20,
@@ -21,7 +29,7 @@ export const BALANCE = {
   ENEMY_REWARD_EXPONENT:  1.1,
 
   // ── Items ────────────────────────────────────────────────────
-  ITEM_SCALE_EXP:    1.12,   // item power = BASE * floor^EXPONENT
+  ITEM_SCALE_EXP:    1.20,   // item power = BASE * floor^EXPONENT
   DROP_CHANCE:       0.35,   // probability of item drop per kill
   RARITY_WEIGHTS: {          // relative weights — higher = more common
     common:    60,
@@ -61,6 +69,11 @@ export const BALANCE = {
   itemSellValue(rarity, floor) {
     const mult = this.RARITY_STAT_MULT[rarity] ?? 1;
     return Math.max(1, Math.round(this.SELL_VALUE_BASE * mult * floor));
+  },
+
+  /** Returns the number of kills needed to unlock the boss on a given floor. */
+  bossKillsNeeded(floor) {
+    return Math.min(this.BOSS_KILL_MAX, this.BOSS_KILL_BASE + floor * this.BOSS_KILL_PER_FLOOR);
   },
 
   /** Returns EXP required to reach the next level. */

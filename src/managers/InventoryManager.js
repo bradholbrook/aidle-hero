@@ -31,7 +31,7 @@ const InventoryManager = {
     const slot = item.type; // "weapon" | "armor" | "accessory"
     const old  = gameState.equipment[slot];
     gameState.inventory.splice(invIndex, 1);
-    if (old) gameState.inventory.push(old);
+    if (old) gameState.inventory.splice(invIndex, 0, old);
     gameState.equipment[slot] = item;
     this.recalcStats(gameState);
   },
