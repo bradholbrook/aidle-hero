@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Aidle Hero</title>
@@ -305,6 +305,18 @@
           <button id="btn-inspect-sell" class="btn btn-secondary">Sell</button>
         </div>
         <button id="btn-inspect-close" class="menu-item menu-item-cancel">Close</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- OVERLAY: Offline Progress                 -->
+    <!-- ══════════════════════════════════════════ -->
+    <div id="offline-overlay" class="overlay hidden">
+      <div class="menu-card">
+        <h3 class="menu-title">Welcome Back!</h3>
+        <p id="offline-time" class="offline-time"></p>
+        <div id="offline-body" class="offline-body"></div>
+        <button id="btn-offline-continue" class="btn btn-primary" style="margin-top:16px">Continue</button>
       </div>
     </div>
 

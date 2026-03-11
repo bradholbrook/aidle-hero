@@ -33,6 +33,11 @@ html, body {
   user-select: none;
 }
 
+/* Prevent double-tap zoom on all interactive elements */
+button, a, [role="button"] {
+  touch-action: manipulation;
+}
+
 /* ─── Game Container ───────────────────────────────────────── */
 #game-container {
   position: fixed;
@@ -727,6 +732,36 @@ html, body {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 .overlay.hidden { display: none; }
+
+.offline-time {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+}
+.offline-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.offline-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: var(--surface2);
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+.offline-row-warn {
+  color: var(--danger);
+  text-align: center;
+  padding: 6px 8px;
+  font-size: 0.9rem;
+}
+.offline-row-value {
+  color: var(--accent);
+  font-weight: 700;
+}
 
 .menu-card {
   background: var(--surface);

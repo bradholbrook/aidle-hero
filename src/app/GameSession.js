@@ -34,10 +34,13 @@ const GameSession = {
     _gs      = gameState;
 
     // ── Offline gains ────────────────────────────────────────
-    const lastSaveMs = gameState.lastSaveTime?.toMillis?.();
+    const lastSaveMs = _tsToMs(gameState.lastSaveTime);
+    console.log("[offline] lastSaveTime raw:", gameState.lastSaveTime);
+    console.log("[offline] lastSaveMs:", lastSaveMs, "now:", Date.now(), "delta:", lastSaveMs ? Date.now() - lastSaveMs : null);
     let gains = null;
     if (lastSaveMs) {
       gains = OfflineManager.applyOfflineGains(gameState, lastSaveMs);
+      console.log("[offline] gains:", gains);
       _applyLevelUps();
     }
 
@@ -114,34 +117,14 @@ const GameSession = {
     if (_saveIntervalId) clearInterval(_saveIntervalId);
     _saveIntervalId = setInterval(() => GameSession.save(), 30_000);
 
-    // ── Start combat ─────────────────────────────────────────
-    _startCombat();
-
-    // ── Offline messages ─────────────────────────────────────
-    if (lastSaveMs && gains) {
-      if (gains.diedOffline) {
-        BattleView.log(
-          `You fell while away, retreating to Floor ${gains.floor}`,
-          "boss",
-        );
-      }
-      if (gains.kills > 0) {
-        const mins = Math.round(gains.deltaMs / 60_000);
-        BattleView.log(
-          `Away ${mins}m — +${gains.gold}g +${gains.exp}xp (${gains.kills} kills)`,
-          "reward",
-        );
-        if (gains.inventoryFull) {
-          BattleView.log("Bag full — no items collected while away", "");
-        } else if (gains.items.length > 0) {
-          const tally   = gains.items.reduce((acc, i) => {
-            acc[i.rarity] = (acc[i.rarity] ?? 0) + 1;
-            return acc;
-          }, {});
-          const summary = Object.entries(tally).map(([r, n]) => `${n} ${r}`).join(", ");
-          BattleView.log(`Found ${gains.items.length} item(s): ${summary}`, "reward");
-        }
-      }
+    // ── Start combat (deferred if offline gains to show) ─────
+    // Show modal if away > 1 min, regardless of whether kills > 0.
+    const showModal = lastSaveMs && gains && (gains.deltaMs > 60_000 || gains.diedOffline);
+    console.log("[offline] showModal:", showModal, "deltaMs:", gains?.deltaMs);
+    if (showModal) {
+      _showOfflineModal(gains, () => _startCombat());
+    } else {
+      _startCombat();
     }
   },
 
@@ -166,6 +149,63 @@ const GameSession = {
     _gs      = null;
   },
 };
+
+// ── Offline modal ─────────────────────────────────────────────────
+
+function _showOfflineModal(gains, onContinue) {
+  const totalMins = Math.round(gains.deltaMs / 60_000);
+  const hours     = Math.floor(totalMins / 60);
+  const mins      = totalMins % 60;
+  const timeStr   = hours > 0
+    ? `${hours}h ${mins}m`
+    : `${mins} minute${mins !== 1 ? "s" : ""}`;
+
+  document.getElementById("offline-time").textContent = `Away for ${timeStr}`;
+
+  const body = document.getElementById("offline-body");
+  body.innerHTML = "";
+
+  const row = (label, value) => {
+    const el = document.createElement("div");
+    el.className = "offline-row";
+    el.innerHTML = `<span>${label}</span><span class="offline-row-value">${value}</span>`;
+    body.appendChild(el);
+  };
+
+  if (gains.diedOffline) {
+    const warn = document.createElement("div");
+    warn.className = "offline-row-warn";
+    warn.textContent = `⚰ Fell while away — retreated to Floor ${gains.floor}`;
+    body.appendChild(warn);
+  }
+
+  row("Kills", gains.kills.toLocaleString());
+  row("Gold", `+${gains.gold.toLocaleString()}g`);
+  row("EXP", `+${gains.exp.toLocaleString()}`);
+
+  if (gains.items.length > 0) {
+    const tally   = gains.items.reduce((acc, i) => { acc[i.rarity] = (acc[i.rarity] ?? 0) + 1; return acc; }, {});
+    const summary = Object.entries(tally).map(([r, n]) => `${n} ${r}`).join(", ");
+    row("Items found", summary);
+  } else if (gains.inventoryFull) {
+    const warn = document.createElement("div");
+    warn.className = "offline-row-warn";
+    warn.textContent = "Bag was full — no items collected";
+    body.appendChild(warn);
+  } else {
+    row("Items found", "none");
+  }
+
+  UIManager.showOverlay("offline-overlay");
+
+  const btn = document.getElementById("btn-offline-continue");
+  const fresh = btn.cloneNode(true);
+  btn.replaceWith(fresh);
+  fresh.addEventListener("click", () => {
+    UIManager.hideOverlay("offline-overlay");
+    onContinue();
+  }, { once: true });
+}
 
 // ── Combat setup ─────────────────────────────────────────────────
 
@@ -330,6 +370,18 @@ function _handleEquipAction(type, item, slot) {
 }
 
 // ── Helpers ───────────────────────────────────────────────────────
+
+/**
+ * Converts a Firestore Timestamp (or plain {seconds,nanoseconds} object) to ms.
+ * Returns null if not a recognised timestamp shape.
+ */
+function _tsToMs(ts) {
+  if (!ts) return null;
+  if (typeof ts.toMillis === "function") return ts.toMillis();           // Firestore Timestamp class
+  if (typeof ts.seconds === "number")   return ts.seconds * 1000;       // plain object fallback
+  if (typeof ts === "number")           return ts;                       // already ms
+  return null;
+}
 
 function _applyLevelUps() {
   const gained = LevelManager.checkLevelUp(_gs);

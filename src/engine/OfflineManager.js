@@ -12,7 +12,8 @@ const OfflineManager = {
    */
   applyOfflineGains(gameState, lastSaveMs) {
     const now     = Date.now();
-    const deltaMs = Math.max(0, now - lastSaveMs);
+    const MAX_OFFLINE_MS = 24 * 60 * 60 * 1000; // 24-hour cap (before ÷3 divisor)
+    const deltaMs = Math.min(MAX_OFFLINE_MS, Math.max(0, now - lastSaveMs));
     const floor   = gameState.progress.currentFloor;
 
     // ── Offline death check ───────────────────────────────────────
