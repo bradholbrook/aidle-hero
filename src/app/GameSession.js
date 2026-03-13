@@ -48,6 +48,7 @@ const GameSession = {
     // ── UI setup ─────────────────────────────────────────────
     UIManager.showScreen("main");
     UIManager.showTab("battle");
+    BattleView.init();
     BattleView.reset();
     HUD.update(gameState);
     BattleView.setHeroHp(gameState.stats.currentHp, gameState.stats.maxHp);
