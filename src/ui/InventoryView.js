@@ -1,4 +1,5 @@
 import InventoryManager from "../managers/InventoryManager.js";
+import { weaponSpriteStyle } from "../data/sprites.js";
 
 const InventoryView = {
   _gameState: null,
@@ -37,7 +38,16 @@ const InventoryView = {
       slot.dataset.index = i;
       const item = gs.inventory[i];
       if (item) {
-        slot.textContent = item.icon ?? "📦";
+        if (item.spriteCoords) {
+          const [row, col] = item.spriteCoords;
+          const sprite = document.createElement("div");
+          sprite.className = "item-sprite";
+          const styles = weaponSpriteStyle(row, col, 2);
+          Object.assign(sprite.style, styles);
+          slot.appendChild(sprite);
+        } else {
+          slot.textContent = item.icon ?? "📦";
+        }
         slot.classList.add(`rarity-${item.rarity}`);
         slot.title = item.name;
         const idx = i;

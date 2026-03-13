@@ -5,8 +5,9 @@
  * show()            — show auth choice screen
  */
 
-import FirebaseService from "../managers/FirebaseService.js";
-import UIManager       from "../ui/UIManager.js";
+import FirebaseService  from "../managers/FirebaseService.js";
+import UIManager        from "../ui/UIManager.js";
+import CloudBackground  from "../ui/CloudBackground.js";
 
 const AuthFlow = {
   _cb:    null,
@@ -21,6 +22,7 @@ const AuthFlow = {
   },
 
   show() {
+    CloudBackground.start();
     UIManager.showScreen("auth");
   },
 
@@ -67,6 +69,7 @@ const AuthFlow = {
       btn.textContent = "Signing in...";
       try {
         const session = await FirebaseService.signInWithCredentials(username, password);
+        CloudBackground.stop();
         this._cb?.onSignedIn?.(session);
       } catch (e) {
         errorEl.textContent = e.message ?? "Sign in failed. Try again.";
@@ -96,6 +99,7 @@ const AuthFlow = {
       btn.textContent = "Creating account...";
       try {
         const session = await FirebaseService.createAccount(username, password);
+        CloudBackground.stop();
         this._cb?.onSignedIn?.(session);
       } catch (e) {
         errorEl.textContent = e.message ?? "Could not create account. Try again.";

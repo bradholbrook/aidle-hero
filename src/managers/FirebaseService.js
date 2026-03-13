@@ -155,9 +155,9 @@ const FirebaseService = {
   // ── Character CRUD (keyed by session.userKey) ─────────────────
 
   async saveCharacter(userKey, characterId, data) {
-    const { lastSaveTime: _ts, ...rest } = data;
+    const { lastSaveTime: _ts, lastSaveMs: _ms, ...rest } = data;
     const ref = doc(db, "users", userKey, "characters", characterId);
-    await setDoc(ref, { ...rest, lastSaveTime: serverTimestamp() }, { merge: true });
+    await setDoc(ref, { ...rest, lastSaveTime: serverTimestamp(), lastSaveMs: Date.now() }, { merge: true });
   },
 
   async loadCharacter(userKey, characterId) {

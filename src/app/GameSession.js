@@ -34,7 +34,8 @@ const GameSession = {
     _gs      = gameState;
 
     // ── Offline gains ────────────────────────────────────────
-    const lastSaveMs = _tsToMs(gameState.lastSaveTime);
+    const lastSaveMs = _tsToMs(gameState.lastSaveTime)
+      ?? (typeof gameState.lastSaveMs === "number" ? gameState.lastSaveMs : null);
     console.log("[offline] lastSaveTime raw:", gameState.lastSaveTime);
     console.log("[offline] lastSaveMs:", lastSaveMs, "now:", Date.now(), "delta:", lastSaveMs ? Date.now() - lastSaveMs : null);
     let gains = null;

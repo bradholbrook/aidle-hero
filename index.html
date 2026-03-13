@@ -7,6 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Aidle Hero</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -19,7 +21,7 @@
       <div class="splash-content">
         <h1 class="game-title">AIDLE<br>HERO</h1>
         <p class="splash-sub">Idle RPG</p>
-        <button id="btn-start" class="btn btn-primary" disabled>Loading...</button>
+        <button type="button" id="btn-start" class="nes-btn is-primary" disabled>Loading...</button>
       </div>
     </section>
 
@@ -31,8 +33,8 @@
         <h1 class="game-title">AIDLE<br>HERO</h1>
         <p class="splash-sub">Choose how to play</p>
         <div class="auth-btn-group">
-          <button id="btn-auth-signin" class="btn btn-primary">Sign In</button>
-          <button id="btn-auth-create" class="btn btn-secondary">Create Account</button>
+          <button type="button" id="btn-auth-signin" class="nes-btn is-primary">Sign In</button>
+          <button type="button" id="btn-auth-create" class="nes-btn">Create Account</button>
         </div>
       </div>
     </section>
@@ -48,14 +50,14 @@
       <div class="screen-body">
         <div class="form-group">
           <label for="signin-username">Username</label>
-          <input type="text" id="signin-username" placeholder="your username" autocomplete="username" autocorrect="off" autocapitalize="none" />
+          <input type="text" class="nes-input" id="signin-username" placeholder="your username" autocomplete="username" autocorrect="off" autocapitalize="none" />
         </div>
         <div class="form-group">
           <label for="signin-password">Password</label>
-          <input type="password" id="signin-password" placeholder="your password" autocomplete="current-password" />
+          <input type="password" class="nes-input" id="signin-password" placeholder="your password" autocomplete="current-password" />
         </div>
         <p id="signin-error" class="form-error"></p>
-        <button id="btn-signin-submit" class="btn btn-primary">Sign In</button>
+        <button type="button" id="btn-signin-submit" class="nes-btn is-primary">Sign In</button>
       </div>
     </section>
 
@@ -73,15 +75,15 @@
         </div>
         <div class="form-group">
           <label for="create-username">Username</label>
-          <input type="text" id="create-username" placeholder="choose a username" maxlength="20" autocomplete="username" autocorrect="off" autocapitalize="none" />
+          <input type="text" class="nes-input" id="create-username" placeholder="choose a username" maxlength="20" autocomplete="username" autocorrect="off" autocapitalize="none" />
           <span class="field-hint">3–20 characters. Letters, numbers, and dashes only. Must be unique.</span>
         </div>
         <div class="form-group">
           <label for="create-password">Password</label>
-          <input type="password" id="create-password" placeholder="choose a password" autocomplete="new-password" />
+          <input type="password" class="nes-input" id="create-password" placeholder="choose a password" autocomplete="new-password" />
         </div>
         <p id="create-error" class="form-error"></p>
-        <button id="btn-create-submit" class="btn btn-primary">Create Account</button>
+        <button type="button" id="btn-create-submit" class="nes-btn is-primary">Create Account</button>
       </div>
     </section>
 
@@ -98,7 +100,7 @@
         <div id="char-list">
           <!-- populated by JS -->
         </div>
-        <button id="btn-new-char" class="btn btn-secondary">+ New Character</button>
+        <button type="button" id="btn-new-char" class="nes-btn">+ New Character</button>
       </div>
     </section>
 
@@ -118,11 +120,11 @@
         </div>
         <div class="form-group">
           <label for="hero-name">Hero Name</label>
-          <input type="text" id="hero-name" placeholder="Enter name..." maxlength="20" autocomplete="off" />
+          <input type="text" class="nes-input" id="hero-name" placeholder="Enter name..." maxlength="20" autocomplete="off" />
           <span class="field-hint">3–20 characters. Letters, numbers, spaces, and dashes.</span>
         </div>
         <p id="char-create-error" class="form-error"></p>
-        <button id="btn-create-char" class="btn btn-primary">Begin Adventure</button>
+        <button type="button" id="btn-create-char" class="nes-btn is-primary">Begin Adventure</button>
       </div>
     </section>
 
@@ -150,31 +152,27 @@
         <!-- Tab: Battle -->
         <div id="tab-battle" class="tab-view active-tab">
           <div id="battle-arena">
-            <div id="hero-sprite" class="sprite-placeholder">⚔️</div>
+            <div id="hero-sprite" class="sprite-char"></div>
             <div id="vs-label">VS</div>
             <div id="enemy-sprite" class="sprite-placeholder">👹</div>
           </div>
           <div id="combat-bars">
             <div class="combat-bar-group">
               <span class="combatant-label">You</span>
-              <div class="hp-bar-wrap">
-                <div id="battle-hero-hp-fill"></div>
-                <span id="battle-hero-hp-label">—</span>
-              </div>
+              <progress class="nes-progress is-success" id="battle-hero-hp-bar" value="100" max="100"></progress>
+              <span id="battle-hero-hp-label">—</span>
             </div>
             <div class="combat-vs">VS</div>
             <div class="combat-bar-group">
               <span class="combatant-label" id="enemy-name"></span>
-              <div class="hp-bar-wrap enemy-hp">
-                <div id="enemy-hp-fill"></div>
-                <span id="enemy-hp-label">—</span>
-              </div>
+              <progress class="nes-progress is-error" id="enemy-hp-bar" value="100" max="100"></progress>
+              <span id="enemy-hp-label">—</span>
             </div>
           </div>
           <div id="battle-log">
             <p class="log-entry">Awaiting battle...</p>
           </div>
-          <button id="btn-boss" class="btn btn-boss" disabled>Fight Boss 🔒</button>
+          <button type="button" id="btn-boss" class="nes-btn is-warning btn-boss" disabled>Fight Boss 🔒</button>
         </div>
 
         <!-- Tab: Equip (character sheet) -->
@@ -219,7 +217,7 @@
             </div>
             <div id="stat-alloc-section" style="display:none">
               <span id="cs-stat-points"></span>
-              <button id="btn-apply-stats" class="btn btn-secondary" disabled>Apply</button>
+              <button type="button" id="btn-apply-stats" class="nes-btn is-primary" disabled>Apply</button>
             </div>
           </div>
 
@@ -249,7 +247,7 @@
                 <option value="rare">Rare &amp; below</option>
                 <option value="epic">Epic &amp; below</option>
               </select>
-              <button id="btn-auto-sell" class="btn btn-secondary">Sell</button>
+              <button type="button" id="btn-auto-sell" class="nes-btn is-warning">Sell</button>
             </div>
           </div>
           <div id="inventory-grid">
@@ -278,20 +276,21 @@
     <!-- OVERLAY: System Menu                      -->
     <!-- ══════════════════════════════════════════ -->
     <div id="system-menu-overlay" class="overlay hidden">
-      <div class="menu-card">
-        <h3 class="menu-title">Menu</h3>
-        <button id="menu-switch-char" class="menu-item">👤 Switch Character</button>
-        <button id="menu-logout" class="menu-item menu-item-danger">🚪 Log Out</button>
-        <button id="menu-delete-account" class="menu-item menu-item-danger">🗑 Delete Account</button>
-        <button id="menu-close" class="menu-item menu-item-cancel">Cancel</button>
-      </div>
+      <section class="nes-container is-dark with-title menu-card">
+        <p class="title">Menu</p>
+        <button type="button" id="menu-switch-char" class="nes-btn menu-item">👤 Switch Character</button>
+        <button type="button" id="menu-logout" class="nes-btn is-error menu-item">🚪 Log Out</button>
+        <button type="button" id="menu-delete-account" class="nes-btn is-error menu-item">🗑 Delete Account</button>
+        <button type="button" id="menu-close" class="nes-btn menu-item menu-item-cancel">Cancel</button>
+      </section>
     </div>
 
     <!-- ══════════════════════════════════════════ -->
     <!-- OVERLAY: Item Inspect                     -->
     <!-- ══════════════════════════════════════════ -->
     <div id="inspect-overlay" class="overlay hidden">
-      <div class="menu-card">
+      <section class="nes-container is-dark with-title menu-card">
+        <p class="title">Inspect Item</p>
         <div class="inspect-header">
           <span id="inspect-icon" class="inspect-icon"></span>
           <div class="inspect-title-block">
@@ -301,35 +300,35 @@
         </div>
         <div id="inspect-stats" class="inspect-stats"></div>
         <div id="inspect-actions" class="inspect-actions">
-          <button id="btn-inspect-primary" class="btn btn-primary">Equip</button>
-          <button id="btn-inspect-sell" class="btn btn-secondary">Sell</button>
+          <button type="button" id="btn-inspect-primary" class="nes-btn is-primary">Equip</button>
+          <button type="button" id="btn-inspect-sell" class="nes-btn is-warning">Sell</button>
         </div>
-        <button id="btn-inspect-close" class="menu-item menu-item-cancel">Close</button>
-      </div>
+        <button type="button" id="btn-inspect-close" class="nes-btn menu-item menu-item-cancel">Close</button>
+      </section>
     </div>
 
     <!-- ══════════════════════════════════════════ -->
     <!-- OVERLAY: Offline Progress                 -->
     <!-- ══════════════════════════════════════════ -->
     <div id="offline-overlay" class="overlay hidden">
-      <div class="menu-card">
-        <h3 class="menu-title">Welcome Back!</h3>
+      <section class="nes-container is-dark with-title menu-card">
+        <p class="title">Welcome Back!</p>
         <p id="offline-time" class="offline-time"></p>
         <div id="offline-body" class="offline-body"></div>
-        <button id="btn-offline-continue" class="btn btn-primary" style="margin-top:16px">Continue</button>
-      </div>
+        <button type="button" id="btn-offline-continue" class="nes-btn is-primary" style="margin-top:16px">Continue</button>
+      </section>
     </div>
 
     <!-- ══════════════════════════════════════════ -->
     <!-- OVERLAY: Confirm Delete                   -->
     <!-- ══════════════════════════════════════════ -->
     <div id="confirm-overlay" class="overlay hidden">
-      <div class="menu-card">
-        <h3 class="menu-title" id="confirm-title">Are you sure?</h3>
+      <section class="nes-container is-dark with-title menu-card">
+        <p class="title" id="confirm-title">Are you sure?</p>
         <p class="confirm-msg" id="confirm-msg"></p>
-        <button id="confirm-yes" class="btn btn-danger">Delete</button>
-        <button id="confirm-no" class="menu-item menu-item-cancel">Cancel</button>
-      </div>
+        <button type="button" id="confirm-yes" class="nes-btn is-error">Delete</button>
+        <button type="button" id="confirm-no" class="nes-btn menu-item menu-item-cancel">Cancel</button>
+      </section>
     </div>
 
   </div>

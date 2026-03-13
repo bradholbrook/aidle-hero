@@ -7,9 +7,10 @@
  * close()
  */
 
-import InventoryManager from "../managers/InventoryManager.js";
-import UIManager        from "./UIManager.js";
+import InventoryManager  from "../managers/InventoryManager.js";
+import UIManager         from "./UIManager.js";
 import { RARITY_COLORS } from "../data/items.js";
+import { weaponSpriteStyle } from "../data/sprites.js";
 
 const STAT_LABELS = {
   damage: "Damage",
@@ -40,7 +41,17 @@ const InspectView = {
   open(item, invIndex, isEquipped, slot) {
     this._state = { item, invIndex, isEquipped, slot };
 
-    document.getElementById("inspect-icon").textContent = item.icon;
+    const iconEl = document.getElementById("inspect-icon");
+    iconEl.innerHTML = "";
+    if (item.spriteCoords) {
+      const [row, col] = item.spriteCoords;
+      const sprite = document.createElement("div");
+      sprite.className = "item-sprite";
+      Object.assign(sprite.style, weaponSpriteStyle(row, col, 2));
+      iconEl.appendChild(sprite);
+    } else {
+      iconEl.textContent = item.icon;
+    }
     const nameEl = document.getElementById("inspect-name");
     nameEl.textContent = item.name;
     nameEl.style.color = RARITY_COLORS[item.rarity] ?? "#888";

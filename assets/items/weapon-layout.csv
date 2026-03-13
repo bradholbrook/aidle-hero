@@ -1,0 +1,50 @@
+id,type,rarity,color
+1,8 rows of hammers,,
+2,9 empty rows,,
+3,10 rows of swords,,
+4,9 empty rows,,
+5,10 rows of axes,,
+6,7 empty rows,,
+7,10 rows of staves,,
+8,8 empty rows,,
+9,4 rows of spears,,
+10,9 empty rows,,
+11,1 row of daggers,,
+1.1,hammer,r,yellow
+2.1,hammer,u,blue
+3.1,hammer,c,
+4.1,hammer,u,
+5.1,hammer,r,
+6.1,hammer,c,
+7.1,hammer,c,
+8.1,hammer,c,blue
+8.2,hammer,u,blue
+8.3,hammer,r,blue
+8.4,hammer,e,blue
+8.5,hammer,l,blue
+1.1,sword,c,
+2.4,sword,c,red
+2.7,sword,r,red
+2.8,sword,e,red
+2.9,sword,l,red
+8.6,sword,u,red
+8.1,axe,c,gray
+8.2,axe,l,gray
+8.3,axe,e,gray
+8.4,axe,r,gray
+8.5,axe,u,gray
+2.1,staff,c,green
+2.2,staff,u,green
+2.6,staff,e,green
+2.4,staff,l,green
+2.5,staff,r,green
+1.5,spear,r,blue
+2.1,spear,c,blue
+2.2,spear,u,blue
+4.3,spear,e,blue
+4.4,spear,l,blue
+1.1,dagger,c,
+1.8,dagger,u,
+1.9,dagger,r,
+1.10,dagger,e,
+1.11,dagger,l,

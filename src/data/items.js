@@ -1,4 +1,5 @@
 import { BALANCE } from "../balance.js";
+import { WEAPON_COORDS } from "./sprites.js";
 
 export const RARITY_COLORS = {
   common:    "#888",
@@ -13,7 +14,7 @@ const RARITIES = ["common", "uncommon", "rare", "epic", "legendary"];
 const TYPE_DEFS = {
   weapon: {
     icon: "⚔️",
-    names: ["Sword", "Axe", "Mace", "Dagger", "Spear", "Blade", "Cleaver"],
+    names: ["Sword", "Axe", "Dagger", "Spear", "Hammer", "Staff"],
     // stat: weight fraction of total budget
     stats: { damage: 0.65, str: 0.35 },
   },
@@ -59,7 +60,7 @@ export function generateItem(floor) {
 
   const name = def.names[Math.floor(Math.random() * def.names.length)];
 
-  return {
+  const item = {
     id:        `${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     type,
     rarity,
@@ -69,6 +70,24 @@ export function generateItem(floor) {
     statBonus,
     goldValue: BALANCE.itemSellValue(rarity, floor),
   };
+
+  if (type === "weapon") {
+    const coords = _pickWeaponSprite(name, rarity);
+    if (coords) item.spriteCoords = coords;
+  }
+
+  return item;
 }
 
 function capitalize(s) { return s[0].toUpperCase() + s.slice(1); }
+
+/** Returns a random sprite coord [row, col] for the given weapon name + rarity, or undefined. */
+function _pickWeaponSprite(weaponName, rarity) {
+  const key = weaponName.toLowerCase();
+  const prefix = `${key}-${rarity}-`;
+  const matches = Object.entries(WEAPON_COORDS)
+    .filter(([k]) => k.startsWith(prefix))
+    .map(([, v]) => v);
+  if (!matches.length) return undefined;
+  return matches[Math.floor(Math.random() * matches.length)];
+}

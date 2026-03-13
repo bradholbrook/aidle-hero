@@ -1,6 +1,7 @@
 import InventoryManager from "../managers/InventoryManager.js";
 import { BALANCE }        from "../balance.js";
 import { RARITY_COLORS }  from "../data/items.js";
+import { weaponSpriteStyle } from "../data/sprites.js";
 
 const EquipView = {
   _gameState: null,
@@ -91,8 +92,24 @@ const EquipView = {
       const color = RARITY_COLORS[item.rarity] ?? "#888";
       el.className     = "equip-slot has-item";
       el.style.borderColor = color;
+
+      let iconHtml;
+      if (item.spriteCoords) {
+        const [row, col] = item.spriteCoords;
+        const s = weaponSpriteStyle(row, col, 2);
+        iconHtml = `<div class="item-sprite" style="
+          background-image:${s.backgroundImage};
+          background-position:${s.backgroundPosition};
+          background-repeat:${s.backgroundRepeat};
+          background-size:${s.backgroundSize};
+          width:${s.width};height:${s.height};
+          image-rendering:pixelated;display:inline-block;"></div>`;
+      } else {
+        iconHtml = `<span class="equip-item-icon">${item.icon}</span>`;
+      }
+
       el.innerHTML = `
-        <span class="equip-item-icon">${item.icon}</span>
+        ${iconHtml}
         <span class="slot-label" style="color:${color}">${item.name}</span>
       `;
       el.onclick = () => this._onAction?.("inspect-equipped", item, slot);
